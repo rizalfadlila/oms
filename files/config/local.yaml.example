@@ -1,0 +1,16 @@
+server:
+  rest:
+    host: "http://localhost"
+    port: 80
+    gracefulTimeout: "15s"
+    writeTimeout: "15s"
+    readTimeout: "15s"
+    routerTimeout: "15s"
+database:
+  mariadb:
+    driver: "mysql"
+    masterDsn: "root:@tcp(localhost:3306)/oms?parseTime=true"
+    retryInterval: "5s"
+    maxIdleConn: "10s"
+    maxConn: "10s"
+    connMaxLifetime: ""

@@ -1,0 +1,16 @@
+version: "3.6"
+
+services:
+  mariadb:
+    image: mariadb:10.6.3
+    platform: linux/amd64
+    ports:
+      - "3306:3306"
+    volumes:
+      - db-data:/var/lib/mysql
+    environment:
+      MARIADB_ALLOW_EMPTY_ROOT_PASSWORD : "yes"
+      MARIADB_DATABASE : "oms"
+
+volumes:
+  db-data:
