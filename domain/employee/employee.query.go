@@ -1,5 +1,5 @@
 package employee
 
 const (
-	store = `insert into employee () values ()`
+	queryStore = `insert into employee (id, first_name, last_name, title, work_phone) values (:id, :first_name, :last_name, :title, :work_phone`
 )

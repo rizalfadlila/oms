@@ -1,5 +1,5 @@
 package product
 
 const (
-	store = `insert into products () values ()`
+	queryStore = `insert into products (id, product_name, unit_price, in_stock) values (:id, :product_name, :unit_price, :in_stock)`
 )

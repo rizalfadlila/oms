@@ -8,5 +8,5 @@ import (
 type OrderDefinition interface {
 	StoreOrder(ctx context.Context, model *models.Order) error
 	StoreOrderDetail(ctx context.Context, model *models.OrderDetail) error
-	GetReportOrder(ctx context.Context) ([]models.ResponseReportOrder, error)
+	GetReportOrderByID(ctx context.Context, id int64) (*models.ResponseReportOrder, error)
 }

@@ -1,9 +1,9 @@
 package models
 
 type ReportOrder struct {
-	CustomerName       string `db:"customer_name"`
-	EmployeeName       string `db:"employee_name"`
-	ShippingMethodName string `db:"shipping_method_name"`
+	CustomerName   string `db:"customer_name"`
+	EmployeeName   string `db:"employee_name"`
+	ShippingMethod string `db:"shipping_method"`
 }
 
 type ReportOrderDetail struct {
@@ -16,18 +16,18 @@ type ReportOrderDetail struct {
 }
 
 type ResponseReportOrder struct {
-	CustomerName       string              `db:"customer_name" json:"customer_name"`
-	EmployeeName       string              `db:"employee_name" json:"employee_name"`
-	ShippingMethodName string              `db:"shipping_method_name" json:"shipping_method_name"`
-	Items              []ReportOrderDetail `db:"-" json:"items"`
-	TotalPayment       float64             `db:"-" json:"total_payment"`
+	CustomerName   string              `json:"customer_name"`
+	EmployeeName   string              `json:"employee_name"`
+	ShippingMethod string              `json:"shipping_method_name"`
+	Items          []ReportOrderDetail `json:"items"`
+	TotalPayment   float64             `json:"total_payment"`
 }
 
 func ComposeReportData(order ReportOrder, detail []ReportOrderDetail) *ResponseReportOrder {
 	data := &ResponseReportOrder{
-		CustomerName:       order.CustomerName,
-		EmployeeName:       order.CustomerName,
-		ShippingMethodName: order.ShippingMethodName,
+		CustomerName:   order.CustomerName,
+		EmployeeName:   order.CustomerName,
+		ShippingMethod: order.ShippingMethod,
 	}
 
 	for _, item := range detail {

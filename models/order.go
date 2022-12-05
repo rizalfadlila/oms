@@ -27,3 +27,15 @@ type OrderDetail struct {
 	Discount  float64 `db:"discount" json:"discount"`
 	SubTotal  float64 `db:"-" json:"sub_total"`
 }
+
+func NewOrderFromRowCSV(data interface{}) *Order {
+	order := Order{}
+
+	return &order
+}
+
+func NewOrderDetailFromRowCSV(data interface{}) *OrderDetail {
+	orderDetail := OrderDetail{}
+
+	return &orderDetail
+}

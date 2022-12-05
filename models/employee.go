@@ -7,3 +7,9 @@ type Employee struct {
 	Title     string `db:"title" json:"title"`
 	WorkPhone string `db:"work_phone" json:"work_phone"`
 }
+
+func NewEmployeeFromRowCSV(data interface{}) *Employee {
+	employee := Employee{}
+
+	return &employee
+}

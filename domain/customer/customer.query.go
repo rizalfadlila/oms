@@ -1,5 +1,9 @@
 package customer
 
 const (
-	store = `insert into customer () values ()`
+	queryStore = `insert into customers (id, company_name, first_name, last_name, billing_address, city, state_or_province, zip_code,
+                       email, phone_number, fax_number, ship_address, ship_city, ship_state_or_province, ship_zip_code,
+                       ship_phone_number) values (:id, :company_name, :first_name, :last_name, :billing_address, :city, :state_or_province, :zip_code,
+                       :email, :phone_number, :fax_number, :ship_address, :ship_city, :ship_state_or_province, :ship_zip_code,
+                       :ship_phone_number)`
 )

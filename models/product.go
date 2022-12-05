@@ -8,3 +8,9 @@ type Product struct {
 	UnitPrice   float64          `db:"unit_price" json:"unit_price"`
 	InStock     datatype.SqlBool `db:"in_stock" json:"in_stock"`
 }
+
+func NewProductFromRowCSV(data interface{}) *Product {
+	product := Product{}
+
+	return &product
+}

@@ -40,7 +40,7 @@ type (
 	}
 
 	Store struct {
-		Master *sqlx.DB
+		master *sqlx.DB
 	}
 
 	Options struct {
@@ -49,10 +49,10 @@ type (
 )
 
 func (s *Store) GetMaster() *sqlx.DB {
-	return s.Master
+	return s.master
 }
 
-func New(cfg DBConfig, dbDriver string) *Store {
+func New(cfg DBConfig) *Store {
 	Master = &DB{
 		DBString:        cfg.MasterDSN,
 		RetryInterval:   cfg.RetryInterval,
@@ -62,7 +62,7 @@ func New(cfg DBConfig, dbDriver string) *Store {
 		doneChannel:     make(chan bool),
 	}
 
-	err := Master.ConnectAndMonitor(dbDriver)
+	err := Master.ConnectAndMonitor(cfg.Driver)
 	if err != nil {
 		log.Fatal("Could not initiate Master DB connection: " + err.Error())
 		return &Store{}
@@ -70,7 +70,7 @@ func New(cfg DBConfig, dbDriver string) *Store {
 
 	dbTicker = time.NewTicker(time.Second * 2)
 
-	return &Store{Master: Master.DBConnection}
+	return &Store{master: Master.DBConnection}
 }
 
 func (d *DB) Connect(driverName string) error {

@@ -18,3 +18,9 @@ type Customers struct {
 	ShipZipCode         string `db:"ship_zip_code" json:"ship_zip_code"`
 	ShipPhoneNumber     string `db:"ship_phone_number" json:"ship_phone_number"`
 }
+
+func NewCustomerFromRowCSV(data interface{}) *Customers {
+	customer := Customers{}
+
+	return &customer
+}
