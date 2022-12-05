@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/jatis/oms/lib/log"
 	"github.com/jmoiron/sqlx"
-	semconv "go.opentelemetry.io/otel/semconv/v1.7.0"
 	"time"
 
 	"github.com/XSAM/otelsql"
@@ -23,7 +22,7 @@ type (
 	DBConfig struct {
 		Driver          string `yaml:"driver"`
 		MasterDSN       string `yaml:"masterDsn"`
-		RetryInterval   int    `yaml:"retryInterval"`
+		RetryInterval   string `yaml:"retryInterval"`
 		MaxIdleConn     int    `yaml:"maxIdleConn"`
 		MaxConn         int    `yaml:"maxConn"`
 		ConnMaxLifetime string `yaml:"connMaxLifetime"`
@@ -32,7 +31,7 @@ type (
 	DB struct {
 		DBConnection    *sqlx.DB
 		DBString        string
-		RetryInterval   int
+		RetryInterval   string
 		MaxIdleConn     int
 		MaxConn         int
 		ConnMaxLifetime string
@@ -74,9 +73,7 @@ func New(cfg DBConfig) *Store {
 }
 
 func (d *DB) Connect(driverName string) error {
-	db, err := otelsql.Open(driverName, d.DBString, otelsql.WithAttributes(
-		semconv.DBSystemPostgreSQL,
-	))
+	db, err := otelsql.Open(driverName, d.DBString)
 	if err != nil {
 		return fmt.Errorf("failed to open DB connection: %w", err)
 	}
@@ -106,11 +103,16 @@ func (d *DB) ConnectAndMonitor(driver string) error {
 	err := d.Connect(driver)
 
 	if err != nil {
-		log.Printf("Not connected to database %s, trying", d.DBString)
+		log.Printf("Not connected to database %v, trying", d.DBString)
 		return err
 	}
 
-	ticker := time.NewTicker(time.Duration(d.RetryInterval) * time.Second)
+	timeTicker, err := time.ParseDuration(d.RetryInterval)
+	if err != nil {
+		return fmt.Errorf("failed to parse duration retry interval: %v", err)
+	}
+
+	ticker := time.NewTicker(timeTicker)
 	go func() error {
 		for {
 			select {

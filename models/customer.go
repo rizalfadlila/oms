@@ -1,5 +1,9 @@
 package models
 
+import (
+	"github.com/jatis/oms/lib/util"
+)
+
 type Customers struct {
 	ID                  int64  `db:"id" json:"id"`
 	CompanyName         string `db:"company_name" json:"company_name"`
@@ -19,8 +23,24 @@ type Customers struct {
 	ShipPhoneNumber     string `db:"ship_phone_number" json:"ship_phone_number"`
 }
 
-func NewCustomerFromRowCSV(data interface{}) *Customers {
-	customer := Customers{}
+func NewCustomerFromRowCSV(data []interface{}) *Customers {
+	customer := Customers{
+		CompanyName:         util.InterfaceToString(data[0]),
+		FirstName:           util.InterfaceToString(data[1]),
+		LastName:            util.InterfaceToString(data[2]),
+		BillingAddress:      util.InterfaceToString(data[3]),
+		City:                util.InterfaceToString(data[4]),
+		StateOrProvince:     util.InterfaceToString(data[5]),
+		ZipCode:             util.InterfaceToString(data[6]),
+		Email:               util.InterfaceToString(data[7]),
+		PhoneNumber:         util.InterfaceToString(data[8]),
+		FaxNumber:           util.InterfaceToString(data[9]),
+		ShipAddress:         util.InterfaceToString(data[10]),
+		ShipCity:            util.InterfaceToString(data[11]),
+		ShipStateOrProvince: util.InterfaceToString(data[12]),
+		ShipZipCode:         util.InterfaceToString(data[13]),
+		ShipPhoneNumber:     util.InterfaceToString(data[14]),
+	}
 
 	return &customer
 }

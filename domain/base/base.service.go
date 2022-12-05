@@ -9,6 +9,8 @@ import (
 	"github.com/jatis/oms/lib/log"
 	"github.com/jatis/oms/repositories"
 	"github.com/jmoiron/sqlx"
+	"math/rand"
+	"time"
 )
 
 type SqlQueryOperator string
@@ -46,8 +48,11 @@ func (b *BaseModule) WithTransaction(ctx context.Context, fn repositories.Transa
 }
 
 func (b *BaseModule) GenerateUUID() int64 {
-	// TODO : implement snowflake
-	return 0
+	rand.Seed(time.Now().UnixNano())
+	min := 1
+	max := 9999999
+	id := rand.Intn(max-min+1) + min
+	return int64(id)
 }
 
 func (b *BaseModule) GetQueryerExecerFromContext(ctx context.Context) QueryExecer {

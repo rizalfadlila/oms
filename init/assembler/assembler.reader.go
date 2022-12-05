@@ -16,15 +16,13 @@ type readerAssembler struct {
 }
 
 func (a *readerAssembler) New() AssemblerManager {
-	ar := &readerAssembler{
-		assembler: &assembler{
-			Initiator: initiator.New(a.fileConfig),
-		},
+	a.assembler = &assembler{
+		Initiator: initiator.New(a.fileConfig),
 	}
 
-	ar.setWorkerType()
+	a.setWorkerType()
 
-	return ar
+	return a
 }
 
 func (a *readerAssembler) RegisterService() AssemblerManager {
@@ -59,7 +57,13 @@ func (a *readerAssembler) WaitAndExit() {
 }
 
 func (a *readerAssembler) setWorkerType() {
-	filename := strings.Split(a.fileSource, "_")
+	folders := strings.Split(a.fileSource, "/")
+
+	if len(folders) == 0 {
+		return
+	}
+
+	filename := strings.Split(folders[len(folders)-1], "_")
 
 	if len(filename) == 0 {
 		return

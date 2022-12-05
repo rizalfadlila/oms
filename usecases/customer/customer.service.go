@@ -6,5 +6,6 @@ import (
 )
 
 func (u *CustomerUsecase) Store(ctx context.Context, model *models.Customers) error {
-	return u.customerManager.Store(ctx, model)
+	err := u.customerManager.Store(ctx, model)
+	return err
 }

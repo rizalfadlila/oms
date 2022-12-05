@@ -3,6 +3,7 @@ package reader
 import (
 	"github.com/jatis/oms/init/assembler"
 	"github.com/jatis/oms/lib/log"
+	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
 )
 
@@ -18,13 +19,15 @@ var (
 
 func rootPreRun(cmd *cobra.Command, args []string) {
 	log.LogInit()
+	logrus.SetFormatter(&logrus.TextFormatter{ForceColors: true})
+	log.SetLevel("debug")
 }
 
 func runReader(cmd *cobra.Command, args []string) error {
 	config, _ := cmd.Flags().GetString("config")
 
 	if config == "" {
-		config = "files/config"
+		config = "files/config/local.yaml"
 	}
 
 	source := cmd.PersistentFlags().Lookup("source").Value.String()

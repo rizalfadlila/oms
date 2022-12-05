@@ -18,3 +18,6 @@ sync-dep:
 
 init-config:
 	cp files/config/local.yaml.example files/config/local.yaml
+
+import-csv:
+	go run main.go reader --source=$(SOURCE)

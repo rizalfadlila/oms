@@ -2,6 +2,7 @@ package reader
 
 import (
 	"encoding/csv"
+	"fmt"
 	"github.com/jatis/oms/handler/reader/worker"
 	"github.com/jatis/oms/init/service"
 	"io"
@@ -19,6 +20,7 @@ type Handler struct {
 	worker      int
 	rows        chan []interface{}
 	wg          *sync.WaitGroup
+	workerType  string
 }
 
 type ReaderHandler interface {
@@ -33,13 +35,15 @@ func New(workerType string, o *Opts) ReaderHandler {
 		worker:      100,
 		rows:        make(chan []interface{}, 0),
 		wg:          new(sync.WaitGroup),
+		workerType:  workerType,
 	}
 
-	worker.New(&worker.Opts{
+	go worker.New(&worker.Opts{
 		Rows:       handler.rows,
 		Wg:         handler.wg,
 		Service:    handler.options.Service,
-		WorkerType: workerType,
+		WorkerType: handler.workerType,
+		Error:      handler.listenErrCh,
 	}).Register()
 
 	return handler
@@ -48,7 +52,7 @@ func New(workerType string, o *Opts) ReaderHandler {
 func (h *Handler) Run(filepath string) {
 	f, err := os.Open(filepath)
 	if err != nil {
-		h.listenErrCh <- err
+		h.listenErrCh <- fmt.Errorf("failed to open file %s: %v", filepath, err)
 	}
 
 	reader := csv.NewReader(f)
@@ -57,8 +61,6 @@ func (h *Handler) Run(filepath string) {
 	h.readRow(reader)
 
 	h.wg.Wait()
-
-	h.listenErrCh <- nil
 }
 
 func (h *Handler) Error() <-chan error {
@@ -72,6 +74,7 @@ func (h *Handler) readRow(reader *csv.Reader) {
 			if err == io.EOF {
 				err = nil
 			}
+			h.listenErrCh <- err
 			break
 		}
 
@@ -83,4 +86,6 @@ func (h *Handler) readRow(reader *csv.Reader) {
 		h.wg.Add(1)
 		h.rows <- rowOrdered
 	}
+
+	close(h.rows)
 }
