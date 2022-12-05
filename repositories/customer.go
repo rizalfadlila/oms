@@ -7,4 +7,5 @@ import (
 
 type CustomerManager interface {
 	Store(ctx context.Context, model *models.Customers) error
+	GetIDByEmail(ctx context.Context, email string) (*int64, error)
 }

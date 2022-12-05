@@ -2,6 +2,7 @@ package models
 
 import (
 	"github.com/jatis/oms/lib/datatype"
+	"github.com/jatis/oms/lib/util"
 )
 
 type Order struct {
@@ -28,14 +29,28 @@ type OrderDetail struct {
 	SubTotal  float64 `db:"-" json:"sub_total"`
 }
 
-func NewOrderFromRowCSV(data interface{}) *Order {
-	order := Order{}
+func NewOrderFromRowCSV(data []interface{}) *Order {
+	order := Order{
+		PurchaseOrderNumber: util.InterfaceToString(data[2]),
+		OrderDate:           datatype.DateInJakarta(util.InterfaceToString(data[3])),
+		ShipDate:            datatype.DateInJakarta(util.InterfaceToString(data[4])),
+		FreightCharge:       util.InterfaceToFloat64(data[6]),
+		Taxes:               util.InterfaceToFloat64(data[7]),
+		PaymentReceived:     int16(util.InterfaceToInt(data[8])),
+		Comment:             util.InterfaceToString(data[9]),
+	}
 
 	return &order
 }
 
-func NewOrderDetailFromRowCSV(data interface{}) *OrderDetail {
-	orderDetail := OrderDetail{}
+func NewOrderDetailFromRowCSV(data []interface{}) *OrderDetail {
+	orderDetail := OrderDetail{
+		OrderID:   util.InterfaceToInt(data[0]),
+		ProductID: util.InterfaceToInt(data[1]),
+		Quantity:  int(util.InterfaceToInt(data[2])),
+		UnitPrice: util.InterfaceToFloat64(data[3]),
+		Discount:  util.InterfaceToFloat64(data[4]),
+	}
 
 	return &orderDetail
 }

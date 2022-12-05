@@ -18,6 +18,13 @@ func InterfaceToString(v interface{}) string {
 	return ""
 }
 
+func InterfaceToInt(v interface{}) int64 {
+	if v != nil && (reflect.TypeOf(v).Kind() == reflect.Int64) || reflect.TypeOf(v).Kind() == reflect.Int32 || reflect.TypeOf(v).Kind() == reflect.Int {
+		return reflect.ValueOf(v).Int()
+	}
+	return 0
+}
+
 func InterfaceToBool(v interface{}) bool {
 	if v != nil && reflect.TypeOf(v).Kind() == reflect.Bool {
 		return reflect.ValueOf(v).Bool()

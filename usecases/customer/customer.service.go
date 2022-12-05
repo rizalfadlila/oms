@@ -6,6 +6,9 @@ import (
 )
 
 func (u *CustomerUsecase) Store(ctx context.Context, model *models.Customers) error {
-	err := u.customerManager.Store(ctx, model)
-	return err
+	return u.customerManager.Store(ctx, model)
+}
+
+func (u *CustomerUsecase) GetIDByEmail(ctx context.Context, email string) (*int64, error) {
+	return u.customerManager.GetIDByEmail(ctx, email)
 }

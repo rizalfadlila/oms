@@ -55,7 +55,7 @@ CREATE TABLE orders (
                         customer_id bigint DEFAULT 0 NOT NULL,
                         employee_id bigint DEFAULT 0 NOT NULL,
                         purchase_order_number varchar(30) DEFAULT '' NOT NULL,
-                        order_date timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
+                        order_date date DEFAULT CURRENT_TIMESTAMP NOT NULL,
                         ship_date date DEFAULT CURRENT_DATE NOT NULL,
                         shipping_method_id bigint NOT NULL,
                         freight_charge numeric(20, 2) DEFAULT 0 NOT NULL,

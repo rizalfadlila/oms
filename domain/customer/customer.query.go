@@ -7,3 +7,7 @@ const (
                        :email, :phone_number, :fax_number, :ship_address, :ship_city, :ship_state_or_province, :ship_zip_code,
                        :ship_phone_number)`
 )
+
+const (
+	queryGetIDByEmail = `select id from customers where email = ? and is_deleted = 0`
+)
