@@ -80,3 +80,7 @@ func IsCustErr(err error) (bool, *ErrChain) {
 	}
 	return false, nil
 }
+
+func ToCustErr(err error) *ErrChain {
+	return New(err)
+}

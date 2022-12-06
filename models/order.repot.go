@@ -7,12 +7,12 @@ type ReportOrder struct {
 }
 
 type ReportOrderDetail struct {
-	ID        int64   `db:"product_id" json:"product_id"`
-	OrderID   int64   `db:"product_name" json:"product_name"`
-	Quantity  int     `db:"quantity" json:"quantity"`
-	UnitPrice float64 `db:"unit_price" json:"unit_price"`
-	Discount  float64 `db:"discount" json:"discount"`
-	SubTotal  float64 `db:"-" json:"sub_total"`
+	ID          int64   `db:"product_id" json:"product_id"`
+	ProductName string  `db:"product_name" json:"product_name"`
+	Quantity    int     `db:"quantity" json:"quantity"`
+	UnitPrice   float64 `db:"unit_price" json:"unit_price"`
+	Discount    float64 `db:"discount" json:"discount"`
+	SubTotal    float64 `db:"-" json:"sub_total"`
 }
 
 type ResponseReportOrder struct {
@@ -26,14 +26,20 @@ type ResponseReportOrder struct {
 func ComposeReportData(order ReportOrder, detail []ReportOrderDetail) *ResponseReportOrder {
 	data := &ResponseReportOrder{
 		CustomerName:   order.CustomerName,
-		EmployeeName:   order.CustomerName,
+		EmployeeName:   order.EmployeeName,
 		ShippingMethod: order.ShippingMethod,
 	}
 
+	items := make([]ReportOrderDetail, 0)
 	for _, item := range detail {
 		item.SubTotal = item.UnitPrice - item.Discount
+
+		items = append(items, item)
+
 		data.TotalPayment += item.SubTotal
 	}
+
+	data.Items = items
 
 	return data
 }

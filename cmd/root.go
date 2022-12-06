@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"github.com/jatis/oms/cmd/reader"
+	"github.com/jatis/oms/cmd/rest"
 	"github.com/jatis/oms/lib/log"
 	"github.com/sirupsen/logrus"
 	"github.com/spf13/cobra"
@@ -19,6 +20,7 @@ func Execute() {
 	logrus.SetFormatter(&logrus.JSONFormatter{})
 
 	registerCronJobCommand()
+	registerRestCommand()
 
 	if err := rootCmd.Execute(); err != nil {
 		log.Fatalln("Error: \n", err.Error())
@@ -33,4 +35,8 @@ func registerCronJobCommand() {
 
 	command.PersistentFlags().StringP("source", "n", "", "Filepath source")
 	command.MarkPersistentFlagRequired("source")
+}
+
+func registerRestCommand() {
+	rootCmd.AddCommand(rest.ExecRestCmd())
 }

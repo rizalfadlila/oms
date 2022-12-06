@@ -22,7 +22,7 @@ func (m *module) GetReportDetailOrderByOrderID(ctx context.Context, id int64) ([
 		result = make([]models.ReportOrderDetail, 0)
 	)
 
-	if err := m.GetQueryerFromContext(ctx).GetContext(ctx, &result, queryGetReportOrderDetail, id); err != nil {
+	if err := m.GetQueryerFromContext(ctx).SelectContext(ctx, &result, queryGetReportOrderDetail, id); err != nil {
 		return nil, err
 	}
 

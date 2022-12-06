@@ -40,6 +40,10 @@ func PreRun(path string, typ AssemblerType, args ...string) AssemblerManager {
 			fileConfig: path,
 			fileSource: args[0],
 		}
+	case AssemblerRest:
+		return &restAssembler{
+			pathConfig: path,
+		}
 	default:
 		log.Fatalln("assembler type not supported")
 		return nil

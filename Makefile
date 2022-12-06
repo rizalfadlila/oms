@@ -21,3 +21,6 @@ init-config:
 
 read-csv:
 	go run main.go reader --source=$(SOURCE)
+
+run-rest:
+	go run main.go serve-rest
