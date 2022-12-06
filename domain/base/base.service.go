@@ -48,11 +48,9 @@ func (b *BaseModule) WithTransaction(ctx context.Context, fn repositories.Transa
 }
 
 func (b *BaseModule) GenerateUUID() int64 {
-	rand.Seed(time.Now().UnixNano())
-	min := 1
-	max := 9999999
-	id := rand.Intn(max-min+1) + min
-	return int64(id)
+	s1 := rand.NewSource(time.Now().UnixNano())
+	r1 := rand.New(s1)
+	return r1.Int63n(999999)
 }
 
 func (b *BaseModule) GetQueryerExecerFromContext(ctx context.Context) QueryExecer {

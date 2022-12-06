@@ -69,6 +69,8 @@ func (h *Handler) Error() <-chan error {
 }
 
 func (h *Handler) readRow(reader *csv.Reader) {
+	header := make([]string, 0)
+
 	for {
 		row, err := reader.Read()
 		if err != nil {
@@ -77,6 +79,11 @@ func (h *Handler) readRow(reader *csv.Reader) {
 			}
 			h.listenErrCh <- err
 			break
+		}
+
+		if len(header) == 0 {
+			header = row
+			continue
 		}
 
 		rowOrdered := make([]interface{}, 0)
