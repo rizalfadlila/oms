@@ -45,11 +45,8 @@ func NewOrderFromRowCSV(data []interface{}) *Order {
 
 func NewOrderDetailFromRowCSV(data []interface{}) *OrderDetail {
 	orderDetail := OrderDetail{
-		OrderID:   util.InterfaceToInt(data[0]),
-		ProductID: util.InterfaceToInt(data[1]),
-		Quantity:  int(util.InterfaceToInt(data[2])),
-		UnitPrice: util.InterfaceToFloat64(data[3]),
-		Discount:  util.InterfaceToFloat64(data[4]),
+		Quantity: int(util.InterfaceToInt(data[2])),
+		Discount: util.InterfaceToFloat64(data[3]),
 	}
 
 	return &orderDetail

@@ -65,7 +65,11 @@ CREATE TABLE orders (
                         created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
                         updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
                         deleted_at timestamp,
-                        is_deleted integer DEFAULT 0 NOT NULL
+                        is_deleted integer DEFAULT 0 NOT NULL,
+
+                        foreign key (customer_id) references customers(id),
+                        foreign key (employee_id) references employees(id),
+                        foreign key (shipping_method_id) references shipping_methods(id)
 );
 CREATE TABLE order_details (
                                id bigint NOT NULL PRIMARY KEY,
@@ -77,5 +81,8 @@ CREATE TABLE order_details (
                                created_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
                                updated_at timestamp DEFAULT CURRENT_TIMESTAMP NOT NULL,
                                deleted_at timestamp,
-                               is_deleted integer DEFAULT 0 NOT NULL
+                               is_deleted integer DEFAULT 0 NOT NULL,
+
+                               foreign key (order_id) references orders(id),
+                               foreign key (product_id) references products(id)
 );

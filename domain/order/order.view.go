@@ -28,3 +28,15 @@ func (m *module) GetReportDetailOrderByOrderID(ctx context.Context, id int64) ([
 
 	return result, nil
 }
+
+func (m *module) GetIDByPO(ctx context.Context, number string) (*int64, error) {
+	var (
+		id int64
+	)
+
+	if err := m.GetQueryerFromContext(ctx).GetContext(ctx, &id, queryGetIDByPO, number); err != nil {
+		return nil, err
+	}
+
+	return &id, nil
+}

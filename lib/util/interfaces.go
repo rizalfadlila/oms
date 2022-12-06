@@ -2,12 +2,20 @@ package util
 
 import (
 	"reflect"
+	"strconv"
 )
 
 func InterfaceToFloat64(v interface{}) float64 {
-	if v != nil && reflect.TypeOf(v).Kind() == reflect.Float64 {
-		return reflect.ValueOf(v).Float()
+	if v != nil {
+		if reflect.TypeOf(v).Kind() == reflect.Float64 {
+			return reflect.ValueOf(v).Float()
+		} else if reflect.TypeOf(v).Kind() == reflect.String {
+			if s, err := strconv.ParseFloat(v.(string), 64); err == nil {
+				return s
+			}
+		}
 	}
+
 	return 0
 }
 
@@ -19,8 +27,14 @@ func InterfaceToString(v interface{}) string {
 }
 
 func InterfaceToInt(v interface{}) int64 {
-	if v != nil && (reflect.TypeOf(v).Kind() == reflect.Int64) || reflect.TypeOf(v).Kind() == reflect.Int32 || reflect.TypeOf(v).Kind() == reflect.Int {
-		return reflect.ValueOf(v).Int()
+	if v != nil {
+		if (reflect.TypeOf(v).Kind() == reflect.Int64) || reflect.TypeOf(v).Kind() == reflect.Int32 || reflect.TypeOf(v).Kind() == reflect.Int {
+			return reflect.ValueOf(v).Int()
+		} else if reflect.TypeOf(v).Kind() == reflect.String {
+			if i, err := strconv.Atoi(v.(string)); err == nil {
+				return int64(i)
+			}
+		}
 	}
 	return 0
 }

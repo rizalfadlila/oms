@@ -53,6 +53,7 @@ func (h *Handler) Run(filepath string) {
 	f, err := os.Open(filepath)
 	if err != nil {
 		h.listenErrCh <- fmt.Errorf("failed to open file %s: %v", filepath, err)
+		return
 	}
 
 	reader := csv.NewReader(f)

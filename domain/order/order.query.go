@@ -20,4 +20,6 @@ const (
 									from order_detail od
 									inner join products p on p.id = od.product_id and o.is_deleted = 0
 									where od.order_id = ? and od.is_deleted = 0`
+
+	queryGetIDByPO = `select id from orders where purchase_order_number = ? and is_deleted = 0`
 )

@@ -28,3 +28,7 @@ func (u *OrderUsecase) GetReportOrderByID(ctx context.Context, id int64) (*model
 
 	return models.ComposeReportData(*order, detail), nil
 }
+
+func (u *OrderUsecase) GetIDByPO(ctx context.Context, number string) (*int64, error) {
+	return u.orderManager.GetIDByPO(ctx, number)
+}

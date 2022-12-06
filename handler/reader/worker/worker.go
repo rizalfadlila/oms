@@ -2,6 +2,8 @@ package worker
 
 import (
 	"context"
+	"database/sql"
+	"errors"
 	"fmt"
 	"github.com/jatis/oms/init/service"
 	"github.com/jatis/oms/lib/log"
@@ -20,7 +22,7 @@ var (
 		"product":      productJob,
 		"shipping":     shippingMethodJob,
 		"order":        orderJob,
-		"order_detail": orderDetailJob,
+		"order-detail": orderDetailJob,
 	}
 )
 
@@ -107,6 +109,7 @@ func customerJob(ctx context.Context, data []interface{}, usecases *service.Usec
 		return fmt.Errorf("column lenght less than 14")
 	}
 	customer := models.NewCustomerFromRowCSV(data)
+
 	return usecases.CustomerUsecase.Store(ctx, customer)
 }
 
@@ -126,17 +129,26 @@ func orderJob(ctx context.Context, data []interface{}, usecases *service.Usecase
 
 	customerID, err := usecases.CustomerUsecase.GetIDByEmail(ctx, util.InterfaceToString(data[0]))
 	if err != nil {
-		return fmt.Errorf("failed get customer_id: %v", err)
+		if errors.Is(err, sql.ErrNoRows) {
+			return fmt.Errorf("failed to get customer: id %s invalid", data[1])
+		}
+		return fmt.Errorf("failed to get customer: %v", err)
 	}
 
 	employeeID, err := usecases.EmployeeUsecase.GetIDByWorkPhone(ctx, util.InterfaceToString(data[1]))
 	if err != nil {
-		return fmt.Errorf("failed get employee_id: %v", err)
+		if errors.Is(err, sql.ErrNoRows) {
+			return fmt.Errorf("failed to get employee: id %s invalid", data[1])
+		}
+		return fmt.Errorf("failed to get employee: %v", err)
 	}
 
 	shippingMethodID, err := usecases.ShippingMethodUsecase.GetIDByMethod(ctx, util.InterfaceToString(data[5]))
 	if err != nil {
-		return fmt.Errorf("failed get shipping_method_id: %v", err)
+		if errors.Is(err, sql.ErrNoRows) {
+			return fmt.Errorf("failed to get shipping method: id %s invalid", data[1])
+		}
+		return fmt.Errorf("failed to get shipping method: %v", err)
 	}
 
 	order.CustomerID = *customerID
@@ -147,10 +159,32 @@ func orderJob(ctx context.Context, data []interface{}, usecases *service.Usecase
 }
 
 func orderDetailJob(ctx context.Context, data []interface{}, usecases *service.Usecases) error {
-	if len(data) < 5 {
+	if len(data) < 4 {
 		return fmt.Errorf("column lenght less than 5")
 	}
+
 	orderDetail := models.NewOrderDetailFromRowCSV(data)
+
+	orderID, err := usecases.OrderUsecase.GetIDByPO(ctx, util.InterfaceToString(data[0]))
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return fmt.Errorf("failed to get order: purchase order number %s invalid", data[1])
+		}
+		return fmt.Errorf("failed to get order: %v", err)
+	}
+
+	product, err := usecases.ProductUsecase.GetByProductName(ctx, util.InterfaceToString(data[1]))
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return fmt.Errorf("failed to get product: product %s not avaiblable", data[1])
+		}
+		return fmt.Errorf("failed to get product: %v", err)
+	}
+
+	orderDetail.OrderID = *orderID
+	orderDetail.ProductID = product.ID
+	orderDetail.UnitPrice = product.UnitPrice
+
 	return usecases.OrderUsecase.StoreOrderDetail(ctx, orderDetail)
 }
 
