@@ -6,6 +6,8 @@ import (
 )
 
 type OrderManager interface {
+	BaseManager
+
 	Store(ctx context.Context, model *models.Order) error
 	StoreDetail(ctx context.Context, model *models.OrderDetail) error
 

@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/jatis/oms/handler/reader/worker"
 	"github.com/jatis/oms/init/service"
+	"github.com/jatis/oms/lib/util"
 	"io"
 	"os"
 	"sync"
@@ -71,6 +72,8 @@ func (h *Handler) Error() <-chan error {
 func (h *Handler) readRow(reader *csv.Reader) {
 	header := make([]string, 0)
 
+	totalOrder := 0
+
 	for {
 		row, err := reader.Read()
 		if err != nil {
@@ -89,6 +92,11 @@ func (h *Handler) readRow(reader *csv.Reader) {
 		rowOrdered := make([]interface{}, 0)
 		for _, each := range row {
 			rowOrdered = append(rowOrdered, each)
+		}
+
+		if h.workerType == "order-detail" {
+			//Discount: util.InterfaceToFloat64(data[3]),
+			totalOrder += int(util.InterfaceToInt(rowOrdered[2]))
 		}
 
 		h.wg.Add(1)

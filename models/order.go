@@ -19,6 +19,11 @@ type Order struct {
 	Comment             string                 `db:"comment" json:"comment"`
 }
 
+type TotalOrder struct {
+	ID         int64   `db:"id"`
+	TotalOrder float64 `db:"total_order"`
+}
+
 type OrderDetail struct {
 	ID        int64   `db:"id" json:"id"`
 	OrderID   int64   `db:"order_id" json:"order_id"`

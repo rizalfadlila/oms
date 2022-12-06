@@ -32,7 +32,7 @@ func ComposeReportData(order ReportOrder, detail []ReportOrderDetail) *ResponseR
 
 	items := make([]ReportOrderDetail, 0)
 	for _, item := range detail {
-		item.SubTotal = item.UnitPrice - item.Discount
+		item.SubTotal = (item.UnitPrice * float64(item.Quantity)) - item.Discount
 
 		items = append(items, item)
 
